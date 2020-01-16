@@ -63,55 +63,7 @@
                     
                     <div class="stat"> <a href="<?php // echo base_url();?>welcome/oil_sampling" title="Critical Component Condition"><i class="icon-warning-sign"></i> </a>
                         <span class="value">
-                            <?php
-//                            $rating_i = $this->db->query("select type, rating
-//                            from inspection a
-//                            where a.ins_date = (
-//                                    select max(ins_date)
-//                                from inspection b
-//                                where a.type = b.type and a.id_unit = b.id_unit and a.id_mod = b.id_mod
-//                            )")->result_array();
-//                            $rating_s = $this->db->query("select type,eval_code 
-//                            from sos c
-//                            where c.sample_date = (
-//                                    select max(sample_date)
-//                                    from sos d
-//                                    where c.type = d.type and c.id_unit = d.id_unit and c.id_mod = d.id_mod
-//                            )")->result_array();
-//
-//                            $cond = "";
-//                            if (empty($rating_i)){
-//                                if (empty($rating_s)){
-//                                }else{
-//                                    $result_s = $rating_s;
-//                                    $array_s = array_map(function($value1){
-//                                               return $value1['eval_code'];
-//                                           }, $result_s);
-//                                    $str_s = implode($array_s);
-//                                    if (strpos($str_s, 'A') !== false || strpos($str_s, 'B') !== false || strpos($str_s, 'Normal') !== false){
-//                                        $cond = "NORMAL";
-//                                    } elseif (strpos($str_s, 'C') !== false || strpos($str_s, 'Attention') !== false){
-//                                        $cond = "ATTENTION";
-//                                    } elseif (strpos($str_s, 'D') !== false || strpos($str_s, 'X') !== false || strpos($str_s, 'Urgent') !== false){
-//                                        $cond = "CRITICAL";
-//                                    }
-//                                }
-//                            } else {
-//                                $result_i = $rating_i;
-//                                $array_i = array_map(function($value){
-//                                               return $value['rating'];
-//                                           }, $result_i);
-//                                $str_i = implode($array_i);
-//                                if ((strpos($str_i, 'A') !== false || strpos($str_i, 'B') !== false) && strpos($str_i, 'C') === false && strpos($str_i, 'X') === false){
-//                                    $cond = "NORMAL";
-//                                } elseif (substr_count($str_i, "C") == 1 && strpos($str_i, 'X') === false){
-//                                    $cond = "ATTENTION";
-//                                } elseif (substr_count($str_i, "C") > 1 || strpos($str_i, 'X') !== false){
-//                                    $cond = "CRITICAL";
-//                                }
-//                            }
-//                            echo $cond;
-//                            ?>
+                            <?php echo $crit;?>
                         </span> 
                     </div>
                   </div>

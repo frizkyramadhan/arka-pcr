@@ -31,6 +31,7 @@ class Welcome extends CI_Controller {
                     $data['app'] = $this->approval_m->getAppL3();
             }
             $data['ba'] = $this->cannibal_m->selectPMNotApproved();
+            $data['crit'] = $this->unit_m->getCritical();
             $this->load->view('welcome',$data);
             $this->load->view('footer');
     }

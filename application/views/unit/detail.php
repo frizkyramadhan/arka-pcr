@@ -68,26 +68,55 @@
                                                             where a.type = b.type and a.id_unit = b.id_unit and a.id_mod = b.id_mod
                                                         ) and a.id_unit = ".$row->id_unit." and a.id_mod = ".$row->id_mod."")->result_array();
                                                         $rating_s = $this->db->query("select type,eval_code from sos c where c.id_unit = ".$row->id_unit." and c.id_mod = ".$row->id_mod." order by sample_date desc limit 1")->row();
-
+                                                        
+                                                        $this->db->where('id_unit',$row->id_unit);
+                                                        $this->db->where('id_mod',$row->id_mod);
+                                                        $this->db->from('condition');
+                                                        $check = $this->db->get()->num_rows();
+                                                        
                                                         $cond = "";
                                                         if (empty($rating_i)){
                                                             if (empty($rating_s)){
                                                             }else{
                                                                 if ($rating_s->eval_code == 'A' || $rating_s->eval_code == 'B' || $rating_s->eval_code == 'Normal'){
                                                                     $cond = "NORMAL";
-                                                                    $this->db->set('condition',$cond);
-                                                                    $this->db->where('id_mod', $row->id_mod);
-                                                                    $this->db->update('commod');
+                                                                    if ($check == 0){
+                                                                        $this->db->set('condition',$cond);
+                                                                        $this->db->set('id_unit', $row->id_unit);
+                                                                        $this->db->set('id_mod', $row->id_mod);
+                                                                        $this->db->insert('condition');
+                                                                    } else {
+                                                                        $this->db->set('condition',$cond);
+                                                                        $this->db->where('id_unit', $row->id_unit);
+                                                                        $this->db->where('id_mod', $row->id_mod);
+                                                                        $this->db->update('condition');
+                                                                    }
                                                                 } elseif ($rating_s->eval_code == 'C' || $rating_s->eval_code == 'Attention'){
                                                                     $cond = "ATTENTION";
-                                                                    $this->db->set('condition',$cond);
-                                                                    $this->db->where('id_mod', $row->id_mod);
-                                                                    $this->db->update('commod');
+                                                                    if ($check == 0){
+                                                                        $this->db->set('condition',$cond);
+                                                                        $this->db->set('id_unit', $row->id_unit);
+                                                                        $this->db->set('id_mod', $row->id_mod);
+                                                                        $this->db->insert('condition');
+                                                                    } else {
+                                                                        $this->db->set('condition',$cond);
+                                                                        $this->db->where('id_unit', $row->id_unit);
+                                                                        $this->db->where('id_mod', $row->id_mod);
+                                                                        $this->db->update('condition');
+                                                                    }
                                                                 } elseif ($rating_s->eval_code == 'D' || $rating_s->eval_code == 'X' || $rating_s->eval_code == 'Urgent'){
                                                                     $cond = "CRITICAL";
-                                                                    $this->db->set('condition',$cond);
-                                                                    $this->db->where('id_mod', $row->id_mod);
-                                                                    $this->db->update('commod');
+                                                                    if ($check == 0){
+                                                                        $this->db->set('condition',$cond);
+                                                                        $this->db->set('id_unit', $row->id_unit);
+                                                                        $this->db->set('id_mod', $row->id_mod);
+                                                                        $this->db->insert('condition');
+                                                                    } else {
+                                                                        $this->db->set('condition',$cond);
+                                                                        $this->db->where('id_unit', $row->id_unit);
+                                                                        $this->db->where('id_mod', $row->id_mod);
+                                                                        $this->db->update('condition');
+                                                                    }
                                                                 }
                                                             }
                                                         } else {
@@ -98,19 +127,43 @@
                                                             $str_i = implode($array_i);
                                                             if ((strpos($str_i, 'A') !== false || strpos($str_i, 'B') !== false) && strpos($str_i, 'C') === false && strpos($str_i, 'X') === false){
                                                                 $cond = "NORMAL";
-                                                                $this->db->set('condition',$cond);
-                                                                $this->db->where('id_mod', $row->id_mod);
-                                                                $this->db->update('commod');
+                                                                if ($check == 0){
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->set('id_unit', $row->id_unit);
+                                                                    $this->db->set('id_mod', $row->id_mod);
+                                                                    $this->db->insert('condition');
+                                                                } else {
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->where('id_unit', $row->id_unit);
+                                                                    $this->db->where('id_mod', $row->id_mod);
+                                                                    $this->db->update('condition');
+                                                                }
                                                             } elseif (substr_count($str_i, "C") == 1 && strpos($str_i, 'X') === false){
                                                                 $cond = "ATTENTION";
-                                                                $this->db->set('condition',$cond);
-                                                                $this->db->where('id_mod', $row->id_mod);
-                                                                $this->db->update('commod');
+                                                                if ($check == 0){
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->set('id_unit', $row->id_unit);
+                                                                    $this->db->set('id_mod', $row->id_mod);
+                                                                    $this->db->insert('condition');
+                                                                } else {
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->where('id_unit', $row->id_unit);
+                                                                    $this->db->where('id_mod', $row->id_mod);
+                                                                    $this->db->update('condition');
+                                                                }
                                                             } elseif (substr_count($str_i, "C") > 1 || strpos($str_i, 'X') !== false){
                                                                 $cond = "CRITICAL";
-                                                                $this->db->set('condition',$cond);
-                                                                $this->db->where('id_mod', $row->id_mod);
-                                                                $this->db->update('commod');
+                                                                if ($check == 0){
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->set('id_unit', $row->id_unit);
+                                                                    $this->db->set('id_mod', $row->id_mod);
+                                                                    $this->db->insert('condition');
+                                                                } else {
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->where('id_unit', $row->id_unit);
+                                                                    $this->db->where('id_mod', $row->id_mod);
+                                                                    $this->db->update('condition');
+                                                                }
                                                             }
                                                         }
                                                         $warna = "";

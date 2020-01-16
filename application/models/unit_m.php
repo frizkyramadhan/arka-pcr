@@ -631,6 +631,20 @@ class Unit_m extends CI_Model{
             and date_hm >= (DATE_SUB(CURDATE(), INTERVAL 3 MONTH)) 
             and id_unit = '.$id.'')->row();
     }
+
+    function getCritical() {
+        $this->db->select('*');
+        $this->db->from('condition,unit, model, project, commod, comp');
+        $this->db->where('condition.id_unit = unit.id_unit');
+        $this->db->where('condition.id_mod = commod.id_mod');
+        $this->db->where('unit.id_model = model.id_model');
+        $this->db->where('unit.id_project = project.id_project');
+        $this->db->where('commod.id_model = model.id_model');
+        $this->db->where('commod.id_comp = comp.id_comp');
+        $this->db->where(array('condition.condition'=> 'CRITICAL'));
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
     
     function select_model($id) {
         $this->db->select('id_model');
