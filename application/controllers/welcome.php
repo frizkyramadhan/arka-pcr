@@ -31,7 +31,7 @@ class Welcome extends CI_Controller {
                     $data['app'] = $this->approval_m->getAppL3();
             }
             $data['ba'] = $this->cannibal_m->selectPMNotApproved();
-            $data['crit'] = $this->unit_m->getCritical();
+            $data['crit'] = $this->unit_m->getCritical()->num_rows();
             $this->load->view('welcome',$data);
             $this->load->view('footer');
     }
@@ -68,6 +68,17 @@ class Welcome extends CI_Controller {
             $this->load->view('summary/replacement',$data);
             $this->load->view('footer');
     }
+
+    public function critical(){
+        $data['title'] = "ARKA Planned Component Replacement";
+        $username = $this->session->userdata('username');
+        $data['pengguna'] = $this->login_m->dataPengguna($username);
+        $this->load->view('header', $data);
+        $this->load->view('navbar', $data);
+        $data['critical'] = $this->unit_m->getCritical()->result();
+        $this->load->view('summary/critical',$data);
+        $this->load->view('footer');
+}
     
 //    public function magnetic(){
 //            $data['title'] = "ARKA Planned Component Replacement";

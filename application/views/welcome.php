@@ -61,7 +61,7 @@
                         </span> 
                     </div>
                     
-                    <div class="stat"> <a href="<?php // echo base_url();?>welcome/oil_sampling" title="Critical Component Condition"><i class="icon-warning-sign"></i> </a>
+                    <div class="stat"> <a href="<?php echo base_url();?>welcome/critical" title="Critical Component Condition"><i class="icon-warning-sign"></i> </a>
                         <span class="value">
                             <?php echo $crit;?>
                         </span> 

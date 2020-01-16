@@ -642,8 +642,7 @@ class Unit_m extends CI_Model{
         $this->db->where('commod.id_model = model.id_model');
         $this->db->where('commod.id_comp = comp.id_comp');
         $this->db->where(array('condition.condition'=> 'CRITICAL'));
-        $query = $this->db->get();
-        return $query->num_rows();
+        return $query = $this->db->get();
     }
     
     function select_model($id) {
