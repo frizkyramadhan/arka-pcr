@@ -75,10 +75,19 @@
                                                             }else{
                                                                 if ($rating_s->eval_code == 'A' || $rating_s->eval_code == 'B' || $rating_s->eval_code == 'Normal'){
                                                                     $cond = "NORMAL";
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->where('id_mod', $row->id_mod);
+                                                                    $this->db->update('commod');
                                                                 } elseif ($rating_s->eval_code == 'C' || $rating_s->eval_code == 'Attention'){
                                                                     $cond = "ATTENTION";
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->where('id_mod', $row->id_mod);
+                                                                    $this->db->update('commod');
                                                                 } elseif ($rating_s->eval_code == 'D' || $rating_s->eval_code == 'X' || $rating_s->eval_code == 'Urgent'){
                                                                     $cond = "CRITICAL";
+                                                                    $this->db->set('condition',$cond);
+                                                                    $this->db->where('id_mod', $row->id_mod);
+                                                                    $this->db->update('commod');
                                                                 }
                                                             }
                                                         } else {
@@ -89,10 +98,19 @@
                                                             $str_i = implode($array_i);
                                                             if ((strpos($str_i, 'A') !== false || strpos($str_i, 'B') !== false) && strpos($str_i, 'C') === false && strpos($str_i, 'X') === false){
                                                                 $cond = "NORMAL";
+                                                                $this->db->set('condition',$cond);
+                                                                $this->db->where('id_mod', $row->id_mod);
+                                                                $this->db->update('commod');
                                                             } elseif (substr_count($str_i, "C") == 1 && strpos($str_i, 'X') === false){
                                                                 $cond = "ATTENTION";
+                                                                $this->db->set('condition',$cond);
+                                                                $this->db->where('id_mod', $row->id_mod);
+                                                                $this->db->update('commod');
                                                             } elseif (substr_count($str_i, "C") > 1 || strpos($str_i, 'X') !== false){
                                                                 $cond = "CRITICAL";
+                                                                $this->db->set('condition',$cond);
+                                                                $this->db->where('id_mod', $row->id_mod);
+                                                                $this->db->update('commod');
                                                             }
                                                         }
                                                         $warna = "";

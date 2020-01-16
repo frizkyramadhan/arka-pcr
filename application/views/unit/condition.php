@@ -53,10 +53,19 @@
                                             $str_s = implode($array_s);
                                             if (strpos($str_s, 'A') !== false || strpos($str_s, 'B') !== false || strpos($str_s, 'Normal') !== false){
                                                 $cond = "NORMAL";
+                                                $this->db->set('condition',$cond);
+                                                $this->db->where('id_mod', $mod->id_mod);
+                                                $this->db->update('commod');
                                             } elseif (strpos($str_s, 'C') !== false || strpos($str_s, 'Attention') !== false){
                                                 $cond = "ATTENTION";
+                                                $this->db->set('condition',$cond);
+                                                $this->db->where('id_mod', $mod->id_mod);
+                                                $this->db->update('commod');
                                             } elseif (strpos($str_s, 'D') !== false || strpos($str_s, 'X') !== false || strpos($str_s, 'Urgent') !== false){
                                                 $cond = "CRITICAL";
+                                                $this->db->set('condition',$cond);
+                                                $this->db->where('id_mod', $mod->id_mod);
+                                                $this->db->update('commod');
                                             }
                                         }
                                     } else {
@@ -67,10 +76,19 @@
                                         $str_i = implode($array_i);
                                         if ((strpos($str_i, 'A') !== false || strpos($str_i, 'B') !== false) && strpos($str_i, 'C') === false && strpos($str_i, 'X') === false){
                                             $cond = "NORMAL";
+                                            $this->db->set('condition',$cond);
+                                            $this->db->where('id_mod', $mod->id_mod);
+                                            $this->db->update('commod');
                                         } elseif (substr_count($str_i, "C") == 1 && strpos($str_i, 'X') === false){
                                             $cond = "ATTENTION";
+                                            $this->db->set('condition',$cond);
+                                            $this->db->where('id_mod', $mod->id_mod);
+                                            $this->db->update('commod');
                                         } elseif (substr_count($str_i, "C") > 1 || strpos($str_i, 'X') !== false){
                                             $cond ="CRITICAL";
+                                            $this->db->set('condition',$cond);
+                                            $this->db->where('id_mod', $mod->id_mod);
+                                            $this->db->update('commod');
                                         }
                                     }
                                     ?>
