@@ -495,13 +495,7 @@ class Unit_m extends CI_Model{
         ) and a.id_unit = $id_unit and a.id_mod = $id_mod"
         )->result_array();
     }
-    
-//    function getRatingSosByComp($id_unit, $id_mod) {
-//        return $this->db->query(
-//        "select type,eval_code from sos c where c.id_unit = $id_unit and c.id_mod = $id_mod order by sample_date desc limit 1"
-//        )->row();
-//    }
-    
+
     function getRatingSosByComp($id_unit, $id_mod) {
         return $this->db->query(
         "select type,eval_code 
@@ -513,6 +507,12 @@ class Unit_m extends CI_Model{
         ) and c.id_unit = $id_unit and c.id_mod = $id_mod"
         )->result_array();
     }
+    
+//    function getRatingSosByComp($id_unit, $id_mod) {
+//        return $this->db->query(
+//        "select type,eval_code from sos c where c.id_unit = $id_unit and c.id_mod = $id_mod order by sample_date desc limit 1"
+//        )->row();
+//    }
     
     function select_reps_asc($id,$id_mod) {
         $this->db->select('*');
