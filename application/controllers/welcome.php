@@ -54,7 +54,7 @@ class Welcome extends CI_Controller {
 //            $data['pengguna'] = $this->login_m->dataPengguna($username);
 //            $this->load->view('header', $data);
 //            $this->load->view('navbar', $data);
-//
+
 //            $this->load->view('summary/oil_sampling',$data);
 //            $this->load->view('footer');
 //    }
