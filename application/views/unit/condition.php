@@ -168,7 +168,7 @@
                 <div class="span6">
                     <div class="widget widget-table action-table">
                         <div class="widget-header" align="center"> <i class="icon-th-list"></i>
-                            <a href="<?php echo base_url('unit/sos/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="blank"><h3>Schedule Oil Sampling Rating</h3></a>
+                            <a href="<?php echo base_url('unit/sos/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="__blank"><h3>Schedule Oil Sampling Rating</h3></a>
                         </div>
                     <!-- /widget-header -->
                     <div class="widget-content">
@@ -212,7 +212,7 @@
                 <!-- /widget --> 
                 <div class="widget widget-table action-table">
                     <div class="widget-header" align="center"> <i class="icon-th-list"></i>
-                        <a href="<?php echo base_url('unit/magnetic_plug_screen/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="blank"><h3>Magnetic Plug/Screen Rating</h3></a>
+                        <a href="<?php echo base_url('unit/magnetic_plug_screen/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="__blank"><h3>Magnetic Plug/Screen Rating</h3></a>
                     </div>
                     <!-- /widget-header -->
                     <div class="widget-content">
@@ -256,7 +256,7 @@
                 <!-- /widget --> 
                 <div class="widget widget-table action-table">
                     <div class="widget-header" align="center"> <i class="icon-th-list"></i>
-                        <a href="<?php echo base_url('unit/ta2/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="blank"><h3>Technical Analysis 2 Rating</h3></a>
+                        <a href="<?php echo base_url('unit/ta2/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="_blank"><h3>Technical Analysis 2 Rating</h3></a>
                     </div>
                     <!-- /widget-header -->
                     <div class="widget-content">
@@ -303,7 +303,7 @@
             <div class="span6">
                 <div class="widget widget-table action-table">
                         <div class="widget-header" align="center"> <i class="icon-th-list"></i>
-                            <a href="<?php echo base_url('unit/filter_cut/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="blank"><h3>Filter Cut Rating</h3></a>
+                            <a href="<?php echo base_url('unit/filter_cut/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="_blank"><h3>Filter Cut Rating</h3></a>
                         </div>
                     <!-- /widget-header -->
                     <div class="widget-content">
@@ -347,7 +347,7 @@
                 <!-- /widget --> 
                 <div class="widget widget-table action-table">
                     <div class="widget-header" align="center"> <i class="icon-th-list"></i>
-                        <a href="<?php echo base_url('unit/visual_inspection/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="blank"><h3>Visual Inpection Rating</h3></a>
+                        <a href="<?php echo base_url('unit/visual_inspection/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="_blank"><h3>Visual Inpection Rating</h3></a>
                     </div>
                     <!-- /widget-header -->
                     <div class="widget-content">
@@ -391,7 +391,7 @@
                 <!-- /widget --> 
                 <div class="widget widget-table action-table">
                     <div class="widget-header" align="center"> <i class="icon-th-list"></i>
-                        <a href="<?php echo base_url('unit/ed/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="blank"><h3>Electronic Data Rating</h3></a>
+                        <a href="<?php echo base_url('unit/ed/'.$mod->id_unit.'/'.$mod->id_mod); ?>" target="_blank"><h3>Electronic Data Rating</h3></a>
                     </div>
                     <!-- /widget-header -->
                     <div class="widget-content">
