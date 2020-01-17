@@ -17,6 +17,8 @@
             <ul class="dropdown-menu">
                 <li class="<?php if($this->uri->segment(1)=="pcr"){echo "active";}?>"><a href="<?php echo base_url();?>pcr"><i class="icon-wrench"></i>&nbsp; Replacement</a></li>
                 <li class="<?php if($this->uri->segment(1)=="sos"){echo "active";}?>"><a href="<?php echo base_url();?>sos"><i class="icon-tint"></i>&nbsp;&nbsp; Oil Sampling</a></li>
+                <li class="<?php if($this->uri->segment(1)=="inspection"){echo "active";}?>"><a href="<?php echo base_url();?>inspection"><i class="icon-check"></i>&nbsp;&nbsp; Inspection</a></li>
+                <li class="<?php if($this->uri->segment(1)=="condition"){echo "active";}?>"><a href="<?php echo base_url();?>condition"><i class="icon-beaker"></i>&nbsp;&nbsp; Condition</a></li>
             </ul>    				
 	</li>
         <li class="<?php if($this->uri->segment(1)=="approval"){echo "active";}?>">
@@ -53,6 +55,7 @@
                 <li class="<?php if($this->uri->segment(1)=="pcr"){echo "active";}?>"><a href="<?php echo base_url();?>pcr"><i class="icon-wrench"></i>&nbsp; Replacement</a></li>
                 <li class="<?php if($this->uri->segment(1)=="sos"){echo "active";}?>"><a href="<?php echo base_url();?>sos"><i class="icon-tint"></i>&nbsp;&nbsp; Oil Sampling</a></li>
                 <li class="<?php if($this->uri->segment(1)=="inspection"){echo "active";}?>"><a href="<?php echo base_url();?>inspection"><i class="icon-check"></i>&nbsp;&nbsp; Inspection</a></li>
+                <li class="<?php if($this->uri->segment(1)=="condition"){echo "active";}?>"><a href="<?php echo base_url();?>condition"><i class="icon-beaker"></i>&nbsp;&nbsp; Condition</a></li>
             </ul>    				
 	</li>
         <li class="<?php if($this->uri->segment(1)=="approval"){echo "active";}?>">
@@ -91,6 +94,7 @@
                 <li class="<?php if($this->uri->segment(1)=="pcr"){echo "active";}?>"><a href="<?php echo base_url();?>pcr"><i class="icon-wrench"></i>&nbsp; Replacement</a></li>
                 <li class="<?php if($this->uri->segment(1)=="sos"){echo "active";}?>"><a href="<?php echo base_url();?>sos"><i class="icon-tint"></i>&nbsp;&nbsp; Oil Sampling</a></li>
                 <li class="<?php if($this->uri->segment(1)=="inspection"){echo "active";}?>"><a href="<?php echo base_url();?>inspection"><i class="icon-check"></i>&nbsp;&nbsp; Inspection</a></li>
+                <li class="<?php if($this->uri->segment(1)=="condition"){echo "active";}?>"><a href="<?php echo base_url();?>condition"><i class="icon-beaker"></i>&nbsp;&nbsp; Condition</a></li>
             </ul>    				
 	</li>
         <li class="<?php if($this->uri->segment(1)=="approval"){echo "active";}?>">
