@@ -122,7 +122,7 @@
                                             <div class="control-group">											
                                                 <label class="control-label">H/M Unit</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span3" name="hm_rep" value="<?php echo $hm->hm_unit?>" readonly="TRUE"/>
+                                                    <input type="text" class="span3" name="hm_rep" value="<?php echo $hm->hm_unit?>"/>
                                                     <!--<input type="text" class="span3" value="0"/>-->
                                                     <!--<input type="hidden" class="span3" name="hm_rep" value="0"/>-->
                                                 </div> <!-- /controls -->				

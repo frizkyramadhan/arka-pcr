@@ -35,7 +35,14 @@ class Comp_m extends CI_Model{
         $id = $this->db->get()->row_array();
         return $id;
     }
+    
+    function select_status($id) {
+        $this->db->select('status');
+        $this->db->from('comp');
+        $this->db->where(array('id_comp'=> $id));
+        $id = $this->db->get()->row_array();
+        return $id;
+    }
 
     
 }
-?>

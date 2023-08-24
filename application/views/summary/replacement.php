@@ -1,3 +1,4 @@
+<?php $conn = mysqli_connect('localhost', 'root', '@rk@*', 'arka_pcr')?>
 <div class="main">
     <div class="main-inner">
         <div class="container">
@@ -38,7 +39,7 @@
                     <tbody>
                         <tr>
                             <?php 
-                            $hasil = $this->db->query("SELECT
+                            $sql = "SELECT
                                     h.id_unit,
                                     u.unit_no,
                                     p.kode_project,
@@ -61,12 +62,13 @@
                                     WHERE r.wo_status = 'OPEN'
                                     GROUP BY u.unit_no, c.comp_desc
                                     HAVING comp_life >= cm.policy
-                                    ORDER BY u.unit_no ASC, c.comp_desc ASC")->result_array();
+                                    ORDER BY u.unit_no ASC, c.comp_desc ASC";
+									$hasil = mysqli_query($conn,$sql);
                             ?>
                             <?php if (empty($hasil)):?>
                             <td colspan="16"><div align="center">No Data Available</div></td>
                             <?php else:?>
-                            <?php while ($row = mysql_fetch_array($hasil)):?>
+                            <?php while ($row = mysqli_fetch_array($hasil)):?>
                             <?php
 //                            $query = $this->db->query('
 //                                select avg (wh_day) as "avg" 

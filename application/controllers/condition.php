@@ -60,7 +60,7 @@ class Condition extends CI_Controller{
  
             $objget->setTitle('Sheet'); //sheet title
              
-            $objget->getStyle("A3:I3")->applyFromArray(
+            $objget->getStyle("A3:F3")->applyFromArray(
                 array(
                     'fill' => array(
                         'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -77,7 +77,7 @@ class Condition extends CI_Controller{
              
             $val = array("No","Site","Unit No.","Model","Component","Component Condition");
             
-            $objset->setCellValue("A"."1", "ARKA Component Inspection");
+            $objset->setCellValue("A"."1", "ARKA Component Condition");
             
             for ($a=0;$a<6; $a++) 
             {

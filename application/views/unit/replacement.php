@@ -134,6 +134,9 @@
                                             <th><div align="center">Next Replacement Date</div></th>
                                             <th><div align="center">Remarks</div></th>
                                             <th><div align="center">Act</div></th>
+											<?php if($pengguna->level == "Admin"):?>
+												<th><div align="center">Del</div></th>
+											<?php endif;?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -199,6 +202,9 @@
                                             <?php else:?>
                                             <td><div align="center">&nbsp;</div></td>
                                             <?php endif;?>
+											<?php if($pengguna->level == "Admin"):?>
+												<td><div align="center"><a href="<?php echo base_url('unit/delete_replacement/'.$row['id_rep'].'/'.$row['id_unit'].'/'.$row['id_mod']); ?>" class="btn btn-mini btn-danger" onclick="return confirm('Are you want to delete this replacement?')">&nbsp;<i class="icon-remove" title="Delete"></i>&nbsp;</a></div></td>
+											<?php endif;?>
                                         </tr>
 <!--                                        <pre>
                                             <?php // print_r($date);?>

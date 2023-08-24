@@ -15,7 +15,8 @@
                                     <div class="control-group">											
                                         <label class="control-label">Unit No.</label>
                                         <div class="controls">
-                                            <input type="text" class="span4" name="unit_no" />
+                                            <input type="text" class="span4" name="unit_no" value="<?php echo set_value('unit_no');?>"/>
+											<?php echo form_error('unit_no', '<p class="help-block" style="color:red">', '</p>')?>
                                         </div> <!-- /controls -->				
                                     </div> <!-- /control-group -->
                                     <div class="control-group">											

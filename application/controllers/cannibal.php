@@ -429,8 +429,8 @@ class Cannibal extends CI_Controller{
              
             $baris  = 4;
             foreach ($ba as $row){
-                $u_r = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = ".$row->no_ba." and k.type = 'REMOVE' order by k.id_kanibal desc limit 1")->row();
-                $u_i = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = ".$row->no_ba." and k.type = 'INSTALL' order by k.id_kanibal desc limit 1")->row();
+                $u_r = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = '".$row->no_ba."' and k.type = 'REMOVE' order by k.id_kanibal desc limit 1")->row();
+                $u_i = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = '".$row->no_ba."' and k.type = 'INSTALL' order by k.id_kanibal desc limit 1")->row();
                  
                 //pemanggilan sesuaikan dengan nama kolom tabel
                 $objset->setCellValue("A".$baris, $row->kode_project);
@@ -451,7 +451,7 @@ class Cannibal extends CI_Controller{
                     $objset->setCellValue("G".$baris, $u_i->wo_no_kanibal);
                 }
                 $objset->setCellValue("H".$baris, $u_r->comp_desc);
-		$objset->setCellValue("I".$baris, $row->symptom);
+				$objset->setCellValue("I".$baris, $row->symptom);
                 $objset->setCellValue("J".$baris, $row->action);
                 $objset->setCellValue("K".$baris, $row->status_ba);
                 $objset->setCellValue("L".$baris, $row->mr_no);

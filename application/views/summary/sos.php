@@ -1,4 +1,4 @@
-<?php $conn = mysqli_connect('localhost', 'root', '', 'arka_pcr')?>
+<?php $conn = mysqli_connect('localhost', 'root', '@rk@*', 'arka_pcr')?>
 <div class="main">
     <div class="main-inner">
         <div class="container">
