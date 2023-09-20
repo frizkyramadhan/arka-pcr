@@ -37,7 +37,8 @@
                                                         "Grader" => "Grader",
                                                         "Lighting Plant" => "Lighting Plant",
                                                         "Off-Highway Truck" => "Off-Highway Truck",
-                                                        "Rigid Truck" => "Rigid Truck"
+                                                        "Rigid Truck" => "Rigid Truck",
+														"Wheel Loader" => "Wheel Loader"
                                                     );
                                             echo form_dropdown('description', $options, $select_comp,"class='span4'");
                                             ?>

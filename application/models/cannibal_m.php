@@ -35,7 +35,7 @@ class Cannibal_m extends CI_Model{
         $user = $this->session->userdata('username');
         $pengguna = $this->login_m->dataPengguna($user);
 
-        $this->db->select('*');
+        $this->db->distinct('*');
         $this->db->from('ba');
         $this->db->from('ba_caused');
         $this->db->from('ba_action');

@@ -10,7 +10,7 @@
                         </div> <!-- /widget-header -->
                         <div class="widget-content">
                             <h4><span style="float: left"><a href="<?php echo site_url('unit/detail/'.$mod->id_unit); ?>" class="btn btn-info"><i class="icon-arrow-left"></i> Back</a></span></h4>
-                            <h4><span style="float: right"><a href="<?php echo site_url('unit/export_condition/'.$mod->id_unit.'/'.$mod->id_mod); ?>" class="btn btn-warning">Export</a></span></h4>
+                            <!-- <h4><span style="float: right"><a href="<?php echo site_url('unit/export_condition/'.$mod->id_unit.'/'.$mod->id_mod); ?>" class="btn btn-warning">Export</a></span></h4> -->
                             <br><br>
                             <div class="form-horizontal">
                                 <table cellspacing="0" width="100%">

@@ -35,8 +35,8 @@
                                     <?php $i=1; ?>
                                     <?php foreach ($app->result() as $row): ?>
                                     <?php
-                                    $u_r = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = ".$row->no_ba." and k.type = 'REMOVE' order by k.id_kanibal desc limit 1")->row();
-                                    $u_i = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = ".$row->no_ba." and k.type = 'INSTALL' order by k.id_kanibal desc limit 1")->row();
+                                    $u_r = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = '".$row->no_ba."' and k.type = 'REMOVE' order by k.id_kanibal desc limit 1")->row();
+                                    $u_i = $this->db->query("select * from kanibal k left join unit u on k.id_unit = u.id_unit where k.no_ba = '".$row->no_ba."' and k.type = 'INSTALL' order by k.id_kanibal desc limit 1")->row();
                                     ?>
                                     <td><div align="center"><?php echo $i++; ?></div></td>
                                     <td><div align="center"><a href="<?php echo base_url();?>cannibal/detail/<?php echo $row->no_ba; ?>" target="blank"><?php echo $row->no_ba; ?></a></div></td>
