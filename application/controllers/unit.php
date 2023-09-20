@@ -281,13 +281,61 @@ class Unit extends CI_Controller
             $this->load->view('unit/edit_rep', $data);
             $this->load->view('footer');
         } else {
-            $this->unit_m->edit_rep($id);
-            redirect('unit/replacement/' . $id_unit . '/' . $id_mod);
+            // proses upload file ke folder assets/file
+            $config['upload_path'] = './assets/file/';
+            $config['allowed_types'] = 'pdf|rar|zip|7z';
+            $config['max_size'] = 50000;
+            $config['file_name'] = url_title($this->input->post('report'));
+
+            $this->upload->initialize($config);
+
+            if ($_FILES['report']['name']) {
+                if ($this->upload->do_upload('report')) {
+                    $doc = $this->upload->data();
+                    $data = $_POST;
+                    $data['report'] = $this->upload->file_name;
+                    //hapus file lama
+                    $this->db->where('id_rep', $id);
+                    $query = $this->db->get('replacement');
+                    $row = $query->row();
+                    unlink("./assets/file/$row->report");
+                    //update data baru
+                    $this->db->where('id_rep', $id)->update('replacement', $data);
+                    $this->session->set_flashdata("message", "Update Data Success !");
+                    redirect('unit/replacement/' . $id_unit . '/' . $id_mod);
+                } else {
+                    $er_upload = $this->upload->display_errors(); /* untuk melihat error uploadnya apa */
+                    //pesan yang muncul jika terdapat error dimasukkan pada session flashdata
+                    $this->session->set_flashdata("message", "Update Data Failed - " . $er_upload);
+                    redirect('unit/edit_replacement/' . $id . '/' . $id_unit . '/' . $id_mod);
+                }
+            } else {
+                $this->db->where('id_rep', $id)->update('replacement', $_POST);
+
+                $this->session->set_flashdata("message", "Update Data Success !");
+                redirect('unit/replacement/' . $id_unit . '/' . $id_mod);
+            }
         }
+    }
+
+    function delete_report($id, $id_unit, $id_mod)
+    {
+        $this->db->where('id_rep', $id);
+        $query = $this->db->get('replacement');
+        $row = $query->row();
+        unlink("./assets/file/$row->report");
+        $this->db->update('replacement', array('report' => ''), array('id_rep' => $id));
+
+        $this->session->set_flashdata("message", "Installation Report deleted");
+        redirect('unit/edit_replacement/' . $id . '/' . $id_unit . '/' . $id_mod);
     }
 
     function delete_replacement($id, $id_unit, $id_mod)
     {
+        $this->db->where('id_rep', $id);
+        $query = $this->db->get('replacement');
+        $row = $query->row();
+        unlink("./assets/file/$row->report");
         $this->unit_m->delete_replacement($id);
         redirect('unit/replacement/' . $id_unit . '/' . $id_mod);
     }
@@ -308,6 +356,53 @@ class Unit extends CI_Controller
         $life = ($comp_life / $policy) * 100;
         $round = round($life, 1);
 
+        if ($rep->comp_type == "MAJOR") {
+            if ($rep->report == null) {
+                $this->session->set_flashdata("message", "Please upload installation report first !");
+                redirect('unit/replacement/' . $id_unit . '/' . $id_mod);
+            } else {
+                $this->db->set('hm_rep', $a);
+                $this->db->set('last_hm_rep', $b);
+                $this->db->set('comp_life', $comp_life);
+                $this->db->set('life_percent', $round);
+                $this->db->set('wo_status', 'CLOSE');
+                $this->db->where('id_rep', $id);
+                $this->db->update('replacement');
+
+                $this->db->set('id_unit', $id_unit);
+                $this->db->set('id_mod', $id_mod);
+                $this->db->set('hm_rep', $hm->hm_unit);
+                $this->db->set('last_hm_rep', $rep->hm_rep);
+                $this->db->set('last_rep_date', $rep->wo_end_date);
+                $this->db->set('wo_status', 'OPEN');
+                $this->db->set('comp_hour', 0);
+                $this->db->set('comp_cond', 'NORMAL');
+                $this->db->insert('replacement');
+
+                redirect('unit/replacement/' . $id_unit . '/' . $id_mod);
+            }
+        } else {
+            $this->db->set('hm_rep', $a);
+            $this->db->set('last_hm_rep', $b);
+            $this->db->set('comp_life', $comp_life);
+            $this->db->set('life_percent', $round);
+            $this->db->set('wo_status', 'CLOSE');
+            $this->db->where('id_rep', $id);
+            $this->db->update('replacement');
+
+            $this->db->set('id_unit', $id_unit);
+            $this->db->set('id_mod', $id_mod);
+            $this->db->set('hm_rep', $hm->hm_unit);
+            $this->db->set('last_hm_rep', $rep->hm_rep);
+            $this->db->set('last_rep_date', $rep->wo_end_date);
+            $this->db->set('wo_status', 'OPEN');
+            $this->db->set('comp_hour', 0);
+            $this->db->set('comp_cond', 'NORMAL');
+            $this->db->insert('replacement');
+
+            redirect('unit/replacement/' . $id_unit . '/' . $id_mod);
+        }
+
         $this->db->set('hm_rep', $a);
         $this->db->set('last_hm_rep', $b);
         $this->db->set('comp_life', $comp_life);
@@ -315,7 +410,6 @@ class Unit extends CI_Controller
         $this->db->set('wo_status', 'CLOSE');
         $this->db->where('id_rep', $id);
         $this->db->update('replacement');
-
 
         $this->db->set('id_unit', $id_unit);
         $this->db->set('id_mod', $id_mod);

@@ -9,11 +9,15 @@
                             <h3>Edit Replacement</h3>
                         </div> <!-- /widget-header -->
                         <div class="widget-content">
+                            <!-- set session message -->
+                            <?php if ($this->session->flashdata('message')) : ?>
+                                <div class="alert alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">×</button>
+                                    <?php echo $this->session->flashdata('message'); ?>
+                                </div>
+                            <?php endif; ?>
                             <h4><span style="float: left"><a href="<?php echo site_url('unit/replacement/' . $rep->id_unit . '/' . $rep->id_mod); ?>" class="btn btn-info"><i class="icon-arrow-left"></i>&nbsp;&nbsp;Back</a></span></h4><br><br>
-                            <!--<pre><?php // print_r($rep);
-                                        ?></pre>-->
                             <div class="form-horizontal">
-                                <pre><?= print_r($rep); ?></pre>
                                 <table cellspacing="0" width="100%">
                                     <tr>
                                         <td>Unit No.</td>
@@ -147,7 +151,7 @@
                                     }
                                 }
                                 ?>
-                                <form class="form-horizontal" role="form" action="" method="post">
+                                <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                                     <fieldset>
                                         <div class="span5">
                                             <input type="hidden" class="span3" name="id_unit" value="<?php echo $rep->id_unit; ?>" />
@@ -223,6 +227,11 @@
                                                 <div class="control-group">
                                                     <label class="control-label"><b>Installation Report</b></label>
                                                     <div class="controls">
+                                                        <?php if ($rep->report) : ?>
+                                                            <a href="<?= base_url('assets/file/' . $rep->report) ?>" target="_blank"><?php echo $rep->report; ?></a> -
+                                                            <a href="<?= base_url('unit/delete_report/' . $rep->id_rep . '/' . $rep->id_unit . '/' . $rep->id_mod) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Do you want to delete this report?')">Delete</a>
+                                                            <br>
+                                                        <?php endif; ?>
                                                         <input type="file" class="span3" name="report" />
                                                     </div> <!-- /controls -->
                                                 </div> <!-- /control-group -->
