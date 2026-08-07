@@ -51,7 +51,11 @@
                                                       'L0'  => 'L0',
                                                       'L1'  => 'L1',
                                                       'L2'  => 'L2',
-                                                      'L3'  => 'L3'
+                                                      'L3'  => 'L3',
+                                                      'LGM' => 'LGM (General Manager)',
+                                                      'LPL' => 'LPL (Plant Manager)',
+                                                      'LOD' => 'LOD (Operational Director)',
+                                                      'LPD' => 'LPD (President Director)'
                                                     );
                                             echo form_dropdown('sign', $sign, 'L0', 'class=span4');
                                             ?>

@@ -1,4 +1,3 @@
-<?php $conn = mysqli_connect('localhost', 'root', '@rk@*', 'arka_pcr')?>
 <div class="main">
     <div class="main-inner">
         <div class="container">
@@ -28,10 +27,18 @@
                                     <?php if (empty($l1)):?>
                                     <?php elseif (empty($l2)):?>
                                     <?php elseif (empty($l3)):?>
+                                    <?php elseif (empty($lgm)):?>
+                                    <?php elseif (empty($lpl)):?>
+                                    <?php elseif (empty($lod)):?>
+                                    <?php elseif (empty($lpd)):?>
                                     <?php else:?>
                                     <input type="hidden" class="span3" name="data_c[1][user_l1]" value="<?php echo $l1->id_user;?>"/>
                                     <input type="hidden" class="span3" name="data_c[1][user_l2]" value="<?php echo $l2->id_user;?>"/>
                                     <input type="hidden" class="span3" name="data_c[1][user_l3]" value="<?php echo $l3->id_user;?>"/>
+                                    <input type="hidden" class="span3" name="data_c[1][user_lgm]" value="<?php echo $lgm->id_user;?>"/>
+                                    <input type="hidden" class="span3" name="data_c[1][user_lpl]" value="<?php echo $lpl->id_user;?>"/>
+                                    <input type="hidden" class="span3" name="data_c[1][user_lod]" value="<?php echo $lod->id_user;?>"/>
+                                    <input type="hidden" class="span3" name="data_c[1][user_lpd]" value="<?php echo $lpd->id_user;?>"/>
                                     <?php endif;?>
                                     <div class="control-group">											
                                         <label class="control-label"><b>Project* :</b></label>
@@ -115,25 +122,18 @@
                                                                 <select name="data_d[1][id_rep]" id="wo_r" onchange="changeValue_r(this.value)" class="span3" >
                                                                 <option value="0">-- Select WO --</option>
                                                                 <?php 
-                                                                $result_r = mysqli_query($conn,
-                                                                            "select * from replacement r
-                                                                            left join unit u on r.id_unit = u.id_unit
-                                                                            left join commod m on r.id_mod = m.id_mod
-                                                                            left join comp c on m.id_comp = c.id_comp
-                                                                            left join project p on u.id_project = p.id_project
-                                                                            where wo_no != 0 and wo_status = 'OPEN'");
-                                                                $jsArray_r = "var dtRep_r = new Array();\n";        
-                                                                while ($row = mysqli_fetch_array($result_r)) {    
-                                                                    echo '<option value="'.$row['id_rep'].'">' . $row['wo_no'] . ' - ' . $row['unit_no'] . ' - ' . $row['comp_desc'] . '</option>';    
-                                                                    $jsArray_r .= "dtRep_r['" . $row['id_rep'] . "'] = 
-                                                                        {wo_no_kanibal1:'" . addslashes($row['wo_no']) . "',
-                                                                         wo_status_kanibal1:'".addslashes($row['wo_status'])."',
-                                                                         comp_hour1:'".addslashes($row['comp_hour'])."',
-                                                                         id_unit1:'".addslashes($row['id_unit'])."',
-                                                                         comp_desc1:'".addslashes($row['comp_desc'])."'
-                                                                        };\n";    
-                                                                }      
-//                                                              ?>    
+                                                                $dtRep_r = array();
+                                                                foreach ($rep as $row) {
+                                                                    echo '<option value="'.$row['id_rep'].'">' . htmlspecialchars($row['wo_no'] . ' - ' . $row['unit_no'] . ' - ' . $row['comp_desc']) . '</option>';
+                                                                    $dtRep_r[$row['id_rep']] = array(
+                                                                        'wo_no_kanibal1' => $row['wo_no'],
+                                                                        'wo_status_kanibal1' => $row['wo_status'],
+                                                                        'comp_hour1' => $row['comp_hour'],
+                                                                        'id_unit1' => $row['id_unit'],
+                                                                        'comp_desc1' => $row['comp_desc']
+                                                                    );
+                                                                }
+                                                                ?>    
                                                                 </select>
                                                                 
                                                             </td>
@@ -227,25 +227,18 @@
                                                                 <select name="data_d[2][id_rep]" id="wo_i" onchange="changeValue_i(this.value)" class="span3">
                                                                 <option value="0">-- Select WO --</option>
                                                                 <?php 
-                                                                $result_i = mysqli_query($conn,
-                                                                            "select * from replacement r
-                                                                            left join unit u on r.id_unit = u.id_unit
-                                                                            left join commod m on r.id_mod = m.id_mod
-                                                                            left join comp c on m.id_comp = c.id_comp
-                                                                            left join project p on u.id_project = p.id_project
-                                                                            where wo_no != 0 and wo_status = 'OPEN'");
-                                                                $jsArray_i = "var dtRep_i = new Array();\n";        
-                                                                while ($row = mysqli_fetch_array($result_i)) {    
-                                                                    echo '<option value="' . $row['id_rep'] . '">' . $row['wo_no'] . ' - ' . $row['unit_no'] . ' - ' . $row['comp_desc'] . '</option>';    
-                                                                    $jsArray_i .= "dtRep_i['" . $row['id_rep'] . "'] = 
-                                                                        {wo_no_kanibal2:'" . addslashes($row['wo_no']) . "',
-                                                                         wo_status_kanibal2:'".addslashes($row['wo_status'])."',
-                                                                         comp_hour2:'".addslashes($row['comp_hour'])."',
-                                                                         id_unit2:'".addslashes($row['id_unit'])."',
-                                                                         comp_desc2:'".addslashes($row['comp_desc'])."'
-                                                                        };\n";    
-                                                                }      
-//                                                              ?>    
+                                                                $dtRep_i = array();
+                                                                foreach ($rep as $row) {
+                                                                    echo '<option value="' . $row['id_rep'] . '">' . htmlspecialchars($row['wo_no'] . ' - ' . $row['unit_no'] . ' - ' . $row['comp_desc']) . '</option>';
+                                                                    $dtRep_i[$row['id_rep']] = array(
+                                                                        'wo_no_kanibal2' => $row['wo_no'],
+                                                                        'wo_status_kanibal2' => $row['wo_status'],
+                                                                        'comp_hour2' => $row['comp_hour'],
+                                                                        'id_unit2' => $row['id_unit'],
+                                                                        'comp_desc2' => $row['comp_desc']
+                                                                    );
+                                                                }
+                                                                ?>    
                                                                 </select>
                                                             </td>
                                                         </tr>
@@ -364,15 +357,17 @@
                                     </div> <!-- /control-group -->
                                     
                                     <div class="control-group">											
-                                        <label class="control-label"><b>MR#</b></label>
+                                        <label class="control-label"><b>MR#*</b></label>
                                         <div class="controls">
                                             <input type="text" class="span3" name="data_c[1][mr_no]" value="<?php echo set_value('data_c[1][mr_no]');?>"/>
+                                            <span style="color: red"><?php echo form_error("data_c[1][mr_no]");?></span>
                                         </div> <!-- /controls -->				
                                     </div> <!-- /control-group -->
                                     <div class="control-group">											
-                                        <label class="control-label"><b>PR#</b></label>
+                                        <label class="control-label"><b>PR#*</b></label>
                                         <div class="controls">
                                             <input type="text" class="span3" name="data_c[1][pr_no]" value="<?php echo set_value('data_c[1][pr_no]');?>"/>
+                                            <span style="color: red"><?php echo form_error("data_c[1][pr_no]");?></span>
                                         </div> <!-- /controls -->				
                                     </div> <!-- /control-group -->
                                     <div class="control-group">											
@@ -410,8 +405,9 @@
 </script>
 
 <script type="text/javascript">    
-    <?php echo $jsArray_r; ?>  
-    function changeValue_r(wo_r){  
+    var dtRep_r = <?php echo json_encode($dtRep_r); ?>;
+    function changeValue_r(wo_r){
+        if (!dtRep_r[wo_r]) { return; }
         document.getElementById('wo_no_kanibal1').value = dtRep_r[wo_r].wo_no_kanibal1;  
         document.getElementById("wo_no_kanibal1").readOnly = true;
         document.getElementById('wo_status_kanibal1').value = dtRep_r[wo_r].wo_status_kanibal1;  
@@ -428,8 +424,9 @@
     }
 </script>
 <script type="text/javascript">    
-    <?php echo $jsArray_i; ?>  
-    function changeValue_i(wo_i){  
+    var dtRep_i = <?php echo json_encode($dtRep_i); ?>;
+    function changeValue_i(wo_i){
+    if (!dtRep_i[wo_i]) { return; }
     document.getElementById('wo_no_kanibal2').value = dtRep_i[wo_i].wo_no_kanibal2;  
     document.getElementById("wo_no_kanibal2").readOnly = true;
     document.getElementById('wo_status_kanibal2').value = dtRep_i[wo_i].wo_status_kanibal2; 

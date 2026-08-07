@@ -22,7 +22,15 @@
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/arka-pcr';
+// Auto-detect so DataTables AJAX works on localhost, 127.0.0.1, or virtual host
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '127.0.0.1:8076';
+$script = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+$base_path = str_replace(basename($script), '', $script);
+$config['base_url'] = $protocol . '://' . $host . $base_path;
+// Fallbacks if needed:
+// $config['base_url'] = 'http://127.0.0.1:8076/';
+// $config['base_url'] = 'http://localhost/arka-pcr/';
 
 /*
 |--------------------------------------------------------------------------

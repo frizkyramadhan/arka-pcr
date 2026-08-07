@@ -46,35 +46,30 @@
                         <?php endif;?>
                         <h4><span style="float: right"><a href="<?php echo site_url('cannibal/print_out/'.$ba->no_ba); ?>" class="btn btn-success" target="blank"><i class="icon-print"></i> Print</a></span></h4>
                         <br>
+                        <?php
+                        $stamp = function($status) {
+                            if($status == "PENDING"){
+                                echo '<div align="center"><img src="'.base_url().'assets/img/pending.png" width="150" height="55" /></div>';
+                            } elseif($status == "APPROVED"){
+                                echo '<div align="center"><img src="'.base_url().'assets/img/approved.png" width="150" height="55" /></div>';
+                            } else {
+                                echo '<div align="center"><img src="'.base_url().'assets/img/not-approved.png" width="150" height="55" /></div>';
+                            }
+                        };
+                        ?>
                         <table width="100%" border="0" cellspacing="1">
                             <tr>
-                                <th>Logistic/WH Officer<br>
-                                    <?php if($ba->status_l1 == "PENDING"):?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/pending.png" width="150" height="55" /></div>
-                                    <?php elseif($ba->status_l1 == "APPROVED"):?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/approved.png" width="150" height="55" /></div>
-                                    <?php else:?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/not-approved.png" width="150" height="55" /></div>
-                                    <?php endif;?>
-                                </th>
-                                <th>Superintendent<br>
-                                    <?php if($ba->status_l2 == "PENDING"):?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/pending.png" width="150" height="55" /></div>
-                                    <?php elseif($ba->status_l2 == "APPROVED"):?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/approved.png" width="150" height="55" /></div>
-                                    <?php else:?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/not-approved.png" width="150" height="55" /></div>
-                                    <?php endif;?>
-                                </th>
-                                <th>Project Manager<br>
-                                    <?php if($ba->status_l3 == "PENDING"):?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/pending.png" width="150" height="55" /></div>
-                                    <?php elseif($ba->status_l3 == "APPROVED"):?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/approved.png" width="150" height="55" /></div>
-                                    <?php else:?>
-                                    <div align="center"><img src="<?php echo base_url()?>assets/img/not-approved.png" width="150" height="55" /></div>
-                                    <?php endif;?>
-                                </th>
+                                <th>Logistic/WH Officer<br><?php $stamp($ba->status_l1); ?></th>
+                                <th>Superintendent<br><?php $stamp($ba->status_l2); ?></th>
+                                <th>Project Manager<br><?php $stamp($ba->status_l3); ?></th>
+                            </tr>
+                            <tr>
+                                <th>General Manager<br><?php $stamp($ba->status_lgm); ?></th>
+                                <th>Plant Manager<br><?php $stamp($ba->status_lpl); ?></th>
+                                <th>Operational Director<br><?php $stamp($ba->status_lod); ?></th>
+                            </tr>
+                            <tr>
+                                <th colspan="3">President Director<br><?php $stamp($ba->status_lpd); ?></th>
                             </tr>
                         </table>
                         
