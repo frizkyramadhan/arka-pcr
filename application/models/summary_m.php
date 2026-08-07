@@ -15,7 +15,7 @@ class Summary_m extends CI_Model {
         if (preg_match('/[;]|--|\/\*|\*\//', $where)) {
             return '1';
         }
-        if (!preg_match('/^[a-zA-Z0-9_`.%!\\\\\s\'\"=<>-]+$/u', $where)) {
+        if (!preg_match('/^[a-zA-Z0-9_`.%!\\\\\s\'\"=<>,()-]+$/u', $where)) {
             return '1';
         }
         return $where;
@@ -454,6 +454,151 @@ class Summary_m extends CI_Model {
             "SELECT * " . $this->conditionBaseFrom() . "
              WHERE (" . $where . ")
              ORDER BY p.kode_project ASC, u.unit_no ASC, c.comp_desc ASC"
+        )->result_array();
+    }
+
+    /* -------------------- Cannibal -------------------- */
+
+    function cannibalUnitRemoveSql()
+    {
+        return "(SELECT u.unit_no FROM kanibal k LEFT JOIN unit u ON k.id_unit=u.id_unit WHERE k.no_ba=ba.no_ba AND k.type='REMOVE' ORDER BY k.id_kanibal DESC LIMIT 1)";
+    }
+
+    function cannibalUnitInstallSql()
+    {
+        return "(SELECT u.unit_no FROM kanibal k LEFT JOIN unit u ON k.id_unit=u.id_unit WHERE k.no_ba=ba.no_ba AND k.type='INSTALL' ORDER BY k.id_kanibal DESC LIMIT 1)";
+    }
+
+    function cannibalWoRemoveSql()
+    {
+        return "(SELECT k.wo_no_kanibal FROM kanibal k WHERE k.no_ba=ba.no_ba AND k.type='REMOVE' ORDER BY k.id_kanibal DESC LIMIT 1)";
+    }
+
+    function cannibalWoInstallSql()
+    {
+        return "(SELECT k.wo_no_kanibal FROM kanibal k WHERE k.no_ba=ba.no_ba AND k.type='INSTALL' ORDER BY k.id_kanibal DESC LIMIT 1)";
+    }
+
+    function cannibalCompSql()
+    {
+        return "(SELECT k.comp_desc FROM kanibal k WHERE k.no_ba=ba.no_ba AND k.type='REMOVE' ORDER BY k.id_kanibal DESC LIMIT 1)";
+    }
+
+    function cannibalPnSql()
+    {
+        return "(SELECT k.pn FROM kanibal k WHERE k.no_ba=ba.no_ba AND k.type='REMOVE' ORDER BY k.id_kanibal DESC LIMIT 1)";
+    }
+
+    private function cannibalBaseFrom()
+    {
+        return " FROM ba
+            LEFT JOIN project p ON ba.id_project = p.id_project
+            LEFT JOIN ba_action a ON ba.id_action = a.id_action ";
+    }
+
+    private function cannibalWhereSql($where, $search)
+    {
+        $sql = " WHERE (" . $where . ") ";
+        if ($search !== '') {
+            $esc = $this->db->escape_like_str($search);
+            $ur = $this->cannibalUnitRemoveSql();
+            $ui = $this->cannibalUnitInstallSql();
+            $comp = $this->cannibalCompSql();
+            $pn = $this->cannibalPnSql();
+            $sql .= " AND (
+                p.kode_project LIKE '%{$esc}%'
+                OR ba.no_ba LIKE '%{$esc}%'
+                OR ba.posting_date LIKE '%{$esc}%'
+                OR ba.symptom LIKE '%{$esc}%'
+                OR ba.status_ba LIKE '%{$esc}%'
+                OR a.action LIKE '%{$esc}%'
+                OR {$ur} LIKE '%{$esc}%'
+                OR {$ui} LIKE '%{$esc}%'
+                OR {$comp} LIKE '%{$esc}%'
+                OR {$pn} LIKE '%{$esc}%'
+            ) ";
+        }
+        return $sql;
+    }
+
+    function countCannibalSummary($where, $search = '')
+    {
+        $where = $this->sanitizeWhere($where);
+        $row = $this->db->query(
+            "SELECT COUNT(*) AS cnt " . $this->cannibalBaseFrom() . $this->cannibalWhereSql($where, $search)
+        )->row();
+        return $row ? (int) $row->cnt : 0;
+    }
+
+    function getCannibalSummaryPage($where, $search, $start, $length, $order_col, $order_dir)
+    {
+        $where = $this->sanitizeWhere($where);
+        $ur = $this->cannibalUnitRemoveSql();
+        $ui = $this->cannibalUnitInstallSql();
+        $wr = $this->cannibalWoRemoveSql();
+        $wi = $this->cannibalWoInstallSql();
+        $comp = $this->cannibalCompSql();
+        $pn = $this->cannibalPnSql();
+
+        $columns = array(
+            'ba.id_ba',
+            'p.kode_project',
+            'ba.posting_date',
+            'ba.no_ba',
+            'unit_remove',
+            'unit_install',
+            'pn',
+            'comp_desc',
+            'ba.symptom',
+            'a.action',
+            'ba.status_ba',
+            'ba.mr_no',
+            'ba.pr_no',
+            'ba.po_no'
+        );
+        $order_by = isset($columns[$order_col]) ? $columns[$order_col] : 'ba.id_ba';
+        $order_dir = strtolower($order_dir) === 'asc' ? 'ASC' : 'DESC';
+
+        $sql = "SELECT ba.id_ba, ba.no_ba, ba.posting_date, ba.symptom, ba.status_ba,
+                ba.mr_no, ba.pr_no, ba.po_no,
+                p.kode_project, a.action,
+                {$ur} AS unit_remove,
+                {$ui} AS unit_install,
+                {$wr} AS wo_remove,
+                {$wi} AS wo_install,
+                {$comp} AS comp_desc,
+                {$pn} AS pn
+            " . $this->cannibalBaseFrom() . $this->cannibalWhereSql($where, $search) . "
+            ORDER BY {$order_by} {$order_dir} ";
+        if ($length > 0) {
+            $sql .= " LIMIT " . (int) $length . " OFFSET " . (int) $start;
+        }
+        return $this->db->query($sql)->result();
+    }
+
+    function getCannibalSummaryExportRows($where)
+    {
+        $where = $this->sanitizeWhere($where);
+        $ur = $this->cannibalUnitRemoveSql();
+        $ui = $this->cannibalUnitInstallSql();
+        $wr = $this->cannibalWoRemoveSql();
+        $wi = $this->cannibalWoInstallSql();
+        $comp = $this->cannibalCompSql();
+        $pn = $this->cannibalPnSql();
+
+        return $this->db->query(
+            "SELECT ba.no_ba, ba.posting_date, ba.symptom, ba.status_ba,
+                ba.mr_no, ba.pr_no, ba.po_no,
+                p.kode_project, a.action,
+                {$ur} AS unit_remove,
+                {$ui} AS unit_install,
+                {$wr} AS wo_remove,
+                {$wi} AS wo_install,
+                {$comp} AS comp_desc,
+                {$pn} AS pn
+            " . $this->cannibalBaseFrom() . "
+             WHERE (" . $where . ")
+             ORDER BY p.kode_project ASC, ba.posting_date DESC, ba.id_ba DESC"
         )->result_array();
     }
 }

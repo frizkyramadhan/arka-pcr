@@ -192,6 +192,23 @@ $(document).ready(function() {
             { data: 'comp_desc' },
             { data: 'condition' }
         ], 1);
+    } else if ($('#summary_cannibal_table').length) {
+        initSummaryTable('#summary_cannibal_table', [
+            { data: 'no', orderable: false, searchable: false },
+            { data: 'kode_project' },
+            { data: 'posting_date' },
+            { data: 'no_ba' },
+            { data: 'unit_remove' },
+            { data: 'unit_install' },
+            { data: 'pn' },
+            { data: 'comp_desc' },
+            { data: 'symptom' },
+            { data: 'action_planner' },
+            { data: 'status_ba' },
+            { data: 'mr_no' },
+            { data: 'pr_no' },
+            { data: 'po_no' }
+        ], 2);
     } else if ($('#approval_table').length) {
         var approvalUrl = $('#approval_datatable_url').val();
         $('#approval_table').DataTable({

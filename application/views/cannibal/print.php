@@ -16,103 +16,147 @@
 .style5 {
 	font-size: 20px
 }
-.tengahjudul {position: absolute;
-margin-left: auto;
-margin-right: auto;
-left: 0;
-right: 0;
-width: 800px;
-font-size: 12px;
-border: 2px solid black;
+.style6 {color: #FFFFFF}
+body {
+	margin: 0;
+	padding: 0;
 }
-.tengahsymtom {position: absolute;
-margin-left: auto;
-margin-right: auto;
-top:113px;
-left: 0;
-right: 0;
-width: 800px;
-font-size: 14px;
-border: 2px solid black;
-}
-.tengahdetail {position: absolute;
-margin-left: auto;
-margin-right: auto;
-top:355px;
-left: 0;
-right: 0;
-width: 800px;
-font-size: 14px;
-border: 2px solid black;
-}
-.tengahsign {position: absolute;
-margin-left: auto;
-margin-right: auto;
-top:640px;
-left: 0;
-right: 0;
-width: 800px;
-font-size: 14px;
-border: 2px solid black;
-}
-.tengahbawah {
-	position: absolute;
-	margin-left: auto;
-	margin-right: auto;
-	top:850px;
-	left: 0;
-	right: 0;
+.print-wrap {
 	width: 800px;
+	margin: 0 auto;
 	font-size: 14px;
+}
+.print-section {
+	width: 100%;
 	border: 2px solid black;
+	margin: 0 0 4px 0;
+	box-sizing: border-box;
+}
+.print-section table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+.print-section td {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	vertical-align: top;
+}
+.print-header {
+	border-collapse: collapse;
+	table-layout: fixed;
+	width: 100%;
+}
+.print-header > tbody > tr > td {
+	border: 1px solid #000;
+	vertical-align: middle;
+	text-align: center;
+}
+.print-header .header-logo {
+	width: 24%;
+	padding: 2px 4px;
+}
+.print-header .header-logo img {
+	display: block;
+	margin: 0 auto;
+	max-width: 140px;
+	max-height: 42px;
+	width: auto;
+	height: auto;
+}
+.print-header .header-title {
+	width: 50%;
+	padding: 2px 4px;
+}
+.print-header .header-title .style4 {
+	font-size: 20px;
+	line-height: 1.1;
+	margin: 0;
+}
+.print-header .header-title .style5 {
+	font-size: 16px;
+	line-height: 1.1;
+	margin: 2px 0 0 0;
+}
+.print-header .header-meta {
+	width: 26%;
+	padding: 0;
+	vertical-align: middle;
+}
+.print-header .header-meta table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+.print-header .header-meta td {
+	border: 1px solid #000;
+	vertical-align: middle;
+	padding: 1px 4px;
+	text-align: left;
+	font-size: 11px;
+	line-height: 1.2;
+}
+.print-footer {
 	background-color: #FFCC66;
 }
-.input{
-position: absolute;
-margin-left: auto;
-margin-right: auto;
-left: 80px;
-top: 345px
+@media print {
+	.print-wrap {
+		width: 800px;
+	}
+	.print-section {
+		page-break-inside: avoid;
+	}
 }
-.style6 {color: #FFFFFF}
 -->
 </style>
 </head>
 
 <body>
-<div class="tengahjudul" align="center">
-<table width="100%" height="70" border="1" cellspacing="0">
+<div class="print-wrap">
+<div class="print-section" align="center">
+<table class="print-header" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td colspan="2" rowspan="4"><div align="center"><img src="<?php echo base_url()?>assets/img/logo.jpg" width="200" height="55" /></div></td>
-    <td width="48%" rowspan="4" class="style4"><div align="center" class="style4">BERITA ACARA KANIBAL</div><div align="center" class="style5">No. <?php echo $ba->no_ba; ?></div></td>
-    <td width="8%" class="style2">Doc. No</td>
-    <td width="1%"><strong>:</strong></td>
-    <td width="17%" class="style2">ARKA/PLT/IV/09.01</td>
-  </tr>
-  <tr>
-    <td class="style2">Rev. No</td>
-    <td><strong>:</strong></td>
-    <td class="style2">1</td>
-  </tr>
-  <tr>
-    <td class="style2">Eff. Date</td>
-    <td><strong>:</strong></td>
-    <td class="style2">01 Juni 2013</td>
-  </tr>
-  <tr>
-    <td height="21" class="style2"><strong>Page</strong></td>
-    <td><strong>:</strong></td>
-    <td class="style2">1 of 1</td>
+    <td class="header-logo">
+      <img src="<?php echo base_url()?>assets/img/logo.jpg" alt="ARKA" />
+    </td>
+    <td class="header-title">
+      <div class="style4">BERITA ACARA KANIBAL</div>
+      <div class="style5">No. <?php echo $ba->no_ba; ?></div>
+    </td>
+    <td class="header-meta">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="style2" width="34%">Doc. No</td>
+          <td class="style2" width="6%"><strong>:</strong></td>
+          <td class="style2" width="60%">ARKA/PLT/IV/09.01</td>
+        </tr>
+        <tr>
+          <td class="style2">Rev. No</td>
+          <td class="style2"><strong>:</strong></td>
+          <td class="style2">1</td>
+        </tr>
+        <tr>
+          <td class="style2">Eff. Date</td>
+          <td class="style2"><strong>:</strong></td>
+          <td class="style2">01 Juni 2013</td>
+        </tr>
+        <tr>
+          <td class="style2"><strong>Page</strong></td>
+          <td class="style2"><strong>:</strong></td>
+          <td class="style2">1 of 1</td>
+        </tr>
+      </table>
+    </td>
   </tr>
 </table>
 </div>
-<div class="tengahsymtom" align="center">
+<div class="print-section" align="center">
 <table width="100%" border="1" cellspacing="0">
   <tr>
-    <td colspan="5" class="style2">SYMPTOM / PROBLEM :<em></em></td>
+    <td colspan="5" class="style2">Site : <?php echo isset($ba->kode_project) ? $ba->kode_project : ''; ?></td>
   </tr>
   <tr>
-      <td height="50" colspan="5" class="style2"><?php echo $ba->symptom;?></td>
+    <td colspan="5" class="style2">Component : <?php echo (isset($det_r) && $det_r) ? $det_r->comp_desc : ''; ?></td>
   </tr>
   <tr>
     <td colspan="5" class="style2">FAILURE / KERUSAKAN :<em></em></td>
@@ -143,15 +187,15 @@ top: 345px
   </tr>
 </table>
 </div>
-<div class="tengahdetail" align="center">
+<div class="print-section" align="center">
 <table width="100%" border="1" cellspacing="0">
   <tr>
     <td colspan="3" bgcolor="#000000"><div align="center"><span class="style3">COMPONENT DETAIL INFORMATION (RINCIAN INFORMASI KOMPONEN)</span></div></td>
     </tr>
   <tr>
-    <td class="style2"><div align="center">REMOVE FROM (DIAMBIL DARI)</div></td>
-    <td class="style2"><div align="center">INSTALL TO (DIPASANG KE)</div></td>
-    <td class="style2"><div align="center">Status of Component Detail</div></td>
+    <td class="style2" width="34%"><div align="center">REMOVE FROM (DIAMBIL DARI)</div></td>
+    <td class="style2" width="34%"><div align="center">INSTALL TO (DIPASANG KE)</div></td>
+    <td class="style2" width="32%"><div align="center">Status of Component Detail</div></td>
   </tr>
   <tr>
     <td><table width="100%" border="0" cellspacing="1" class="style2">
@@ -263,7 +307,7 @@ top: 345px
   </tr>
 </table>
 </div>
-<div class="tengahsign" align="center">
+<div class="print-section" align="center">
 <table width="100%" border="1" cellspacing="0">
   <tr>
     <td class="style2"><div align="center">
@@ -364,7 +408,7 @@ top: 345px
   </tr>
 </table>
 </div>
-<div class="tengahbawah" align="center">
+<div class="print-section print-footer" align="center">
 <table width="100%" border="1" cellspacing="0">
   <tr>
    <td colspan="3" bgcolor="#000000"><div align="center"><span class="style3">***** RECORD AND DOCUMENTATION *****</span></div></td>
@@ -427,6 +471,7 @@ top: 345px
       </div></td>
     </tr>
 </table>
+</div>
 </div>
 </body>
 </html>
