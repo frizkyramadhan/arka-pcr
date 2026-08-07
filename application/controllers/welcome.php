@@ -22,16 +22,9 @@ class Welcome extends CI_Controller {
             $this->load->view('header', $data);
             $this->load->view('navbar', $data);
 
-            $pengguna = $this->login_m->dataPengguna($username);
-            if($pengguna->sign == 'L1'){
-                    $data['app'] = $this->approval_m->getAppL1();
-            }elseif ($pengguna->sign == 'L2'){
-                    $data['app'] = $this->approval_m->getAppL2();
-            }else {
-                    $data['app'] = $this->approval_m->getAppL3();
-            }
-            $data['ba'] = $this->cannibal_m->selectPMNotApproved();
-            $data['crit'] = $this->unit_m->getCritical()->num_rows();
+            $data['pcr_count'] = $this->unit_m->countPcrExceed();
+            $data['cannibal_count'] = $this->cannibal_m->countPMNotApproved();
+            $data['crit'] = $this->unit_m->countCritical();
             $this->load->view('welcome',$data);
             $this->load->view('footer');
     }
@@ -63,6 +56,7 @@ class Welcome extends CI_Controller {
             $data['title'] = "ARKA Planned Component Replacement";
             $username = $this->session->userdata('username');
             $data['pengguna'] = $this->login_m->dataPengguna($username);
+            $data['hasil'] = $this->unit_m->getPcrExceedList();
             $this->load->view('header', $data);
             $this->load->view('navbar', $data);
             $this->load->view('summary/replacement',$data);

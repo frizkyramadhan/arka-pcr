@@ -13,6 +13,7 @@ class Inspection extends CI_Controller{
             redirect('login/process_login');
         }else {
             $this->load->model('login_m');
+            $this->load->model('summary_m');
             $this->load->library(array('PHPExcel','PHPExcel/IOFactory'));
         }
     }
@@ -24,30 +25,90 @@ class Inspection extends CI_Controller{
         $this->load->view('header', $data);
         $this->load->view('navbar', $data);
         
-        //penentuan dropdown project
         $dbres_proj = $this->db->query('select * from project order by kode_project asc');
         $ddmenu_proj = array();
         foreach ($dbres_proj->result_array() as $tablerow) {
             $ddmenu_proj[$tablerow['kode_project']] = $tablerow['kode_project'];
         }
         $data['proj_options'] = $ddmenu_proj;
+        $data['filter_where'] = $this->buildFilterWhere($_POST);
         
         $this->load->view('summary/inspection', $data);
         $this->load->view('footer');
     }
+
+    private function buildFilterWhere($post)
+    {
+        $bagianWhere = "";
+        if (isset($post['siteCat'])) {
+            $project = $this->db->escape_like_str($post['kode_project']);
+            $bagianWhere .= (empty($bagianWhere) ? '' : ' AND ') . "kode_project LIKE '{$project}'";
+        }
+        if (isset($post['unitCat'])) {
+            $unit = $this->db->escape_like_str($post['unit_no']);
+            $bagianWhere .= (empty($bagianWhere) ? '' : ' AND ') . "unit_no LIKE '%{$unit}%'";
+        }
+        if (isset($post['compCat'])) {
+            $comp = $this->db->escape_like_str($post['comp_desc']);
+            $bagianWhere .= (empty($bagianWhere) ? '' : ' AND ') . "comp_desc LIKE '%{$comp}%'";
+        }
+        if (isset($post['ratingCat'])) {
+            $rating = $this->db->escape_like_str($post['rating']);
+            $bagianWhere .= (empty($bagianWhere) ? '' : ' AND ') . "rating LIKE '%{$rating}%'";
+        }
+        if (isset($post['typeCat'])) {
+            $type = $this->db->escape_like_str($post['type']);
+            $bagianWhere .= (empty($bagianWhere) ? '' : ' AND ') . "type LIKE '%{$type}%'";
+        }
+        return $bagianWhere === '' ? '1' : $bagianWhere;
+    }
+
+    function datatable()
+    {
+        $p = $this->summary_m->getDtParams();
+        $where = $this->summary_m->sanitizeWhere($this->input->get_post('where'));
+        $records_total = $this->summary_m->countInspection('1', '');
+        $records_filtered = $this->summary_m->countInspection($where, $p['search']);
+        $rows = $this->summary_m->getInspectionPage(
+            $where, $p['search'], $p['start'], $p['length'], $p['order_col'], $p['order_dir']
+        );
+
+        $data = array();
+        $no = $p['start'] + 1;
+        foreach ($rows as $row) {
+            $warna = '#ffffff';
+            if ($row->rating == 'A') {
+                $warna = '#00ff00';
+            } elseif ($row->rating == 'B') {
+                $warna = '#ffff00';
+            } elseif ($row->rating == 'C') {
+                $warna = '#ff9900';
+            } elseif ($row->rating == 'X') {
+                $warna = '#ff0000';
+            }
+            $data[] = array(
+                'no' => $no++,
+                'kode_project' => htmlspecialchars((string) $row->kode_project),
+                'ins_date' => htmlspecialchars((string) $row->ins_date),
+                'unit_no' => htmlspecialchars((string) $row->unit_no),
+                'comp_desc' => htmlspecialchars((string) $row->comp_desc),
+                'ins_hm' => htmlspecialchars((string) $row->ins_hm),
+                'rating' => '<span style="background:'.$warna.';padding:2px 8px;font-weight:bold;">'.htmlspecialchars((string) $row->rating).'</span>',
+                'type' => htmlspecialchars((string) $row->type)
+            );
+        }
+
+        $this->output->set_content_type('application/json')->set_output(json_encode(array(
+            'draw' => $p['draw'],
+            'recordsTotal' => $records_total,
+            'recordsFiltered' => $records_filtered,
+            'data' => $data
+        ), JSON_UNESCAPED_UNICODE));
+    }
     
     public function export(){
-        $bagianWhere = isset($_POST['where'])?$_POST['where']:'';
-        
-        $sql = $this->db->query("SELECT * 
-                FROM inspection s 
-                LEFT JOIN unit u ON s.id_unit = u.id_unit
-                LEFT JOIN commod cm ON s.id_mod = cm.id_mod
-                LEFT JOIN model m ON u.id_model = m.id_model AND cm.id_model = m.id_model
-                LEFT JOIN project p ON u.id_project = p.id_project
-                LEFT JOIN comp c ON cm.id_comp = c.id_comp
-                WHERE ".$bagianWhere."
-                ORDER BY p.kode_project ASC, u.unit_no ASC, c.comp_desc ASC, s.id_ins DESC")->result_array();
+        $bagianWhere = $this->summary_m->sanitizeWhere(isset($_POST['where']) ? $_POST['where'] : '1');
+        $sql = $this->summary_m->getInspectionExportRows($bagianWhere);
         
 //        $data['query'] = $sql;
 //        $data['where'] = $bagianWhere;

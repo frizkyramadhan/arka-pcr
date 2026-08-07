@@ -24,17 +24,72 @@ class Cannibal extends CI_Controller{
         $data['pengguna'] = $this->login_m->dataPengguna($username);
         $this->load->view('header', $data);
         $this->load->view('navbar', $data);
-        $user = $this->session->userdata('username');
-        $pengguna = $this->login_m->dataPengguna($user);
-        
-        if($pengguna->kode_project == '000H'){
-            $data['ba'] = $this->cannibal_m->selectAll();
-        }else{
-            $data['ba'] = $this->cannibal_m->selectAllByProject();
-        }
-        
         $this->load->view('cannibal/cannibal', $data);
         $this->load->view('footer');
+    }
+
+    function datatable() {
+        $username = $this->session->userdata('username');
+        $pengguna = $this->login_m->dataPengguna($username);
+
+        $draw = (int) $this->input->get_post('draw');
+        $start = max(0, (int) $this->input->get_post('start'));
+        $length = (int) $this->input->get_post('length');
+        if ($length === 0) {
+            $length = 10;
+        }
+        if ($length < 0) {
+            $length = -1;
+        }
+
+        $search = '';
+        $search_arr = $this->input->get_post('search');
+        if (is_array($search_arr) && isset($search_arr['value'])) {
+            $search = trim($search_arr['value']);
+        }
+
+        $order_col = 0;
+        $order_dir = 'desc';
+        $order = $this->input->get_post('order');
+        if (is_array($order) && isset($order[0]['column'])) {
+            $order_col = (int) $order[0]['column'];
+            $order_dir = isset($order[0]['dir']) ? $order[0]['dir'] : 'desc';
+        }
+
+        $records_total = $this->cannibal_m->countCannibalList($pengguna, '');
+        $records_filtered = ($search === '')
+            ? $records_total
+            : $this->cannibal_m->countCannibalList($pengguna, $search);
+        $rows = $this->cannibal_m->getCannibalListPage(
+            $pengguna, $search, $start, $length, $order_col, $order_dir
+        );
+
+        $data = array();
+        $no = $start + 1;
+        foreach ($rows as $row) {
+            $symptom = htmlspecialchars(strtoupper((string) $row->symptom), ENT_QUOTES, 'UTF-8');
+            $data[] = array(
+                'no' => $no++,
+                'kode_project' => htmlspecialchars((string) $row->kode_project, ENT_QUOTES, 'UTF-8'),
+                'posting_date' => htmlspecialchars((string) $row->posting_date, ENT_QUOTES, 'UTF-8'),
+                'no_ba' => htmlspecialchars((string) $row->no_ba, ENT_QUOTES, 'UTF-8'),
+                'unit_remove' => $row->unit_remove ? htmlspecialchars((string) $row->unit_remove, ENT_QUOTES, 'UTF-8') : '-',
+                'unit_install' => $row->unit_install ? htmlspecialchars((string) $row->unit_install, ENT_QUOTES, 'UTF-8') : '-',
+                'symptom' => '<textarea rows="1" readonly="true">'.$symptom.'</textarea>',
+                'action_planner' => htmlspecialchars(strtoupper((string) $row->action), ENT_QUOTES, 'UTF-8'),
+                'status_ba' => htmlspecialchars((string) $row->status_ba, ENT_QUOTES, 'UTF-8'),
+                'action' => '<div align="center"><a href="'.site_url('cannibal/detail/'.$row->no_ba).'" class="btn btn-mini btn-info">Detail</a></div>'
+            );
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'draw' => $draw,
+                'recordsTotal' => $records_total,
+                'recordsFiltered' => $records_filtered,
+                'data' => $data
+            ), JSON_UNESCAPED_UNICODE));
     }
     
     function add($id_project = 0) {
@@ -62,6 +117,8 @@ class Cannibal extends CI_Controller{
         $this->form_validation->set_rules("data_c[1][failure]",'Failure','required');
         $this->form_validation->set_rules("data_c[1][id_caused]",'Failure Caused','callback_validate_caused');
         $this->form_validation->set_rules("data_c[1][id_status]",'Component Status','callback_validate_status');
+        $this->form_validation->set_rules("data_c[1][mr_no]",'MR Number','required|trim');
+        $this->form_validation->set_rules("data_c[1][pr_no]",'PR Number','required|trim');
         
         $this->form_validation->set_rules("data_d[1][date]",'Date','required');
         $this->form_validation->set_rules("data_d[1][wo_no_kanibal]",'WO Number','required');
@@ -92,6 +149,7 @@ class Cannibal extends CI_Controller{
             $data['kode_project'] = $this->cannibal_m->getKodeProject($id_project);
             $data['project'] = $this->cannibal_m->getProject();
             $data['no_ba'] = $this->cannibal_m->generateAutoid($id_project);
+            $data['rep'] = $this->cannibal_m->getReplacement();
             $this->load->view('cannibal/add_cannibal',$data);
             $this->load->view('footer');
         } else {
@@ -130,6 +188,8 @@ class Cannibal extends CI_Controller{
         $this->form_validation->set_rules("data_c[1][failure]",'Failure','required');
         $this->form_validation->set_rules("data_c[1][id_caused]",'Failure Caused','callback_validate_caused');
         $this->form_validation->set_rules("data_c[1][id_status]",'Component Status','callback_validate_status');
+        $this->form_validation->set_rules("data_c[1][mr_no]",'MR Number','required|trim');
+        $this->form_validation->set_rules("data_c[1][pr_no]",'PR Number','required|trim');
         
         $this->form_validation->set_rules("data_d[1][date]",'Date','required');
         $this->form_validation->set_rules("data_d[1][wo_no_kanibal]",'WO Number','required');
@@ -156,10 +216,14 @@ class Cannibal extends CI_Controller{
             $data['kode_project'] = $this->cannibal_m->getKodeProject($id_project);
             $data['project'] = $this->cannibal_m->getProject();
             $data['no_ba'] = $this->cannibal_m->generateAutoid($id_project);
-            $data['pcr'] = $this->cannibal_m->getReplacement();
+            $data['rep'] = $this->cannibal_m->getReplacement();
             $data['l1'] = $this->cannibal_m->get_l1($id_project);
             $data['l2'] = $this->cannibal_m->get_l2($id_project);
             $data['l3'] = $this->cannibal_m->get_l3($id_project);
+            $data['lpl'] = $this->cannibal_m->get_lpl();
+            $data['lgm'] = $this->cannibal_m->get_lgm();
+            $data['lod'] = $this->cannibal_m->get_lod();
+            $data['lpd'] = $this->cannibal_m->get_lpd();
             $this->load->view('cannibal/add_cannibal_series',$data);
             $this->load->view('footer');
         } else {

@@ -59,7 +59,7 @@ border: 2px solid black;
 	position: absolute;
 	margin-left: auto;
 	margin-right: auto;
-	top:725px;
+	top:850px;
 	left: 0;
 	right: 0;
 	width: 800px;
@@ -315,6 +315,52 @@ top: 345px
     </div>
     <br>
     </td>
+  </tr>
+  <tr>
+    <td class="style2"><div align="center">
+      <label class="style2">GENERAL MANAGER</label>
+        <?php if($ba->status_lgm == "PENDING"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/pending.png" width="150" height="45" /></div>
+        <?php elseif($ba->status_lgm == "APPROVED"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/approved.png" width="150" height="45" /></div>
+        <?php else:?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/not-approved.png" width="150" height="45" /></div>
+        <?php endif;?>
+    </div>
+    <br></td>
+    <td class="style2"><div align="center">
+      <label class="style2">PLANT MANAGER</label>
+        <?php if($ba->status_lpl == "PENDING"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/pending.png" width="150" height="45" /></div>
+        <?php elseif($ba->status_lpl == "APPROVED"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/approved.png" width="150" height="45" /></div>
+        <?php else:?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/not-approved.png" width="150" height="45" /></div>
+        <?php endif;?>
+    </div>
+    <br></td>
+    <td class="style2"><div align="center">
+      <label class="style2">OPERATIONAL DIRECTOR</label>
+        <?php if($ba->status_lod == "PENDING"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/pending.png" width="150" height="45" /></div>
+        <?php elseif($ba->status_lod == "APPROVED"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/approved.png" width="150" height="45" /></div>
+        <?php else:?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/not-approved.png" width="150" height="45" /></div>
+        <?php endif;?>
+    </div>
+    <br></td>
+    <td class="style2"><div align="center">
+      <label class="style2">PRESIDENT DIRECTOR</label>
+        <?php if($ba->status_lpd == "PENDING"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/pending.png" width="150" height="45" /></div>
+        <?php elseif($ba->status_lpd == "APPROVED"):?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/approved.png" width="150" height="45" /></div>
+        <?php else:?>
+        <div align="center"><img src="<?php echo base_url()?>assets/img/not-approved.png" width="150" height="45" /></div>
+        <?php endif;?>
+    </div>
+    <br></td>
   </tr>
 </table>
 </div>

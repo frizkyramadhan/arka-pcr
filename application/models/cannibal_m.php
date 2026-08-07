@@ -19,15 +19,40 @@ class Cannibal_m extends CI_Model{
     }
     
     function selectPMNotApproved() {
+        $unit_remove_sql = "(SELECT u.unit_no FROM kanibal k
+            LEFT JOIN unit u ON k.id_unit = u.id_unit
+            WHERE k.no_ba = ba.no_ba AND k.type = 'REMOVE'
+            ORDER BY k.id_kanibal DESC LIMIT 1)";
+        $unit_install_sql = "(SELECT u.unit_no FROM kanibal k
+            LEFT JOIN unit u ON k.id_unit = u.id_unit
+            WHERE k.no_ba = ba.no_ba AND k.type = 'INSTALL'
+            ORDER BY k.id_kanibal DESC LIMIT 1)";
+        $comp_remove_sql = "(SELECT k.comp_desc FROM kanibal k
+            WHERE k.no_ba = ba.no_ba AND k.type = 'REMOVE'
+            ORDER BY k.id_kanibal DESC LIMIT 1)";
+
         return $this->db->query(
-                    'SELECT DISTINCT * 
-                    FROM ba 
-                    LEFT JOIN ba_caused ON ba.id_caused = ba_caused.id_caused
-                    LEFT JOIN ba_action ON ba.id_action = ba_action.id_action
-                    LEFT JOIN project ON ba.id_project = project.id_project
-                    WHERE ba.status_l3 = "PENDING" AND ba.status_l1 != "NOT APPROVED" AND ba.status_l2 != "NOT APPROVED"
-                    ORDER BY ba.id_ba DESC'
-                );
+            "SELECT ba.*, project.kode_project,
+                {$unit_remove_sql} AS unit_remove,
+                {$unit_install_sql} AS unit_install,
+                {$comp_remove_sql} AS comp_desc
+             FROM ba
+             LEFT JOIN project ON ba.id_project = project.id_project
+             WHERE ba.status_l3 = 'PENDING'
+               AND ba.status_l1 != 'NOT APPROVED'
+               AND ba.status_l2 != 'NOT APPROVED'
+             ORDER BY ba.id_ba DESC"
+        );
+    }
+
+    function countPMNotApproved() {
+        $row = $this->db->query(
+            'SELECT COUNT(*) AS c FROM ba
+             WHERE status_l3 = "PENDING"
+               AND status_l1 != "NOT APPROVED"
+               AND status_l2 != "NOT APPROVED"'
+        )->row();
+        return $row ? (int) $row->c : 0;
     }
     
     function selectAllByProject() {
@@ -48,6 +73,74 @@ class Cannibal_m extends CI_Model{
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    private function applyCannibalScope($pengguna) {
+        if ($pengguna->kode_project != '000H') {
+            $this->db->where('ba.id_project', (int) $pengguna->id_project);
+        }
+    }
+
+    private function buildCannibalListQuery($pengguna, $search = '') {
+        $unit_remove_sql = "(SELECT u.unit_no FROM kanibal k
+            LEFT JOIN unit u ON k.id_unit = u.id_unit
+            WHERE k.no_ba = ba.no_ba AND k.type = 'REMOVE'
+            ORDER BY k.id_kanibal DESC LIMIT 1)";
+        $unit_install_sql = "(SELECT u.unit_no FROM kanibal k
+            LEFT JOIN unit u ON k.id_unit = u.id_unit
+            WHERE k.no_ba = ba.no_ba AND k.type = 'INSTALL'
+            ORDER BY k.id_kanibal DESC LIMIT 1)";
+
+        $this->db->from('ba');
+        $this->db->join('ba_caused', 'ba.id_caused = ba_caused.id_caused', 'left');
+        $this->db->join('ba_action', 'ba.id_action = ba_action.id_action', 'left');
+        $this->db->join('project', 'ba.id_project = project.id_project', 'left');
+        $this->db->select("ba.id_ba, ba.no_ba, ba.posting_date, ba.symptom, ba.status_ba,
+            project.kode_project, ba_action.`action` AS action,
+            {$unit_remove_sql} AS unit_remove,
+            {$unit_install_sql} AS unit_install", false);
+        $this->applyCannibalScope($pengguna);
+
+        if ($search !== '') {
+            $esc = $this->db->escape_like_str($search);
+            $this->db->where("(project.kode_project LIKE '%{$esc}%'
+                OR ba.posting_date LIKE '%{$esc}%'
+                OR ba.no_ba LIKE '%{$esc}%'
+                OR ba.symptom LIKE '%{$esc}%'
+                OR ba_action.action LIKE '%{$esc}%'
+                OR ba.status_ba LIKE '%{$esc}%'
+                OR {$unit_remove_sql} LIKE '%{$esc}%'
+                OR {$unit_install_sql} LIKE '%{$esc}%')", null, false);
+        }
+    }
+
+    function countCannibalList($pengguna, $search = '') {
+        $this->buildCannibalListQuery($pengguna, $search);
+        return (int) $this->db->count_all_results();
+    }
+
+    function getCannibalListPage($pengguna, $search, $start, $length, $order_col, $order_dir) {
+        $columns = array(
+            'ba.id_ba',
+            'project.kode_project',
+            'ba.posting_date',
+            'ba.no_ba',
+            'unit_remove',
+            'unit_install',
+            'ba.symptom',
+            'ba_action.action',
+            'ba.status_ba',
+            'ba.id_ba'
+        );
+        $order_by = isset($columns[$order_col]) ? $columns[$order_col] : 'ba.id_ba';
+        $order_dir = strtolower($order_dir) === 'asc' ? 'asc' : 'desc';
+
+        $this->buildCannibalListQuery($pengguna, $search);
+        $this->db->order_by($order_by, $order_dir);
+        if ($length > 0) {
+            $this->db->limit($length, $start);
+        }
+        return $this->db->get()->result();
     }
     
     function insert($set) {
@@ -250,6 +343,42 @@ class Cannibal_m extends CI_Model{
         $this->db->where(array('user.id_project' => $id));
         $id = $this->db->get()->row();
         return $id;
+    }
+
+    function get_lpl() {
+        $this->db->select('id_user');
+        $this->db->from('user');
+        $this->db->where("sign = 'LPL'");
+        $this->db->order_by('id_user', 'asc');
+        $this->db->limit(1);
+        return $this->db->get()->row();
+    }
+
+    function get_lgm() {
+        $this->db->select('id_user');
+        $this->db->from('user');
+        $this->db->where("sign = 'LGM'");
+        $this->db->order_by('id_user', 'asc');
+        $this->db->limit(1);
+        return $this->db->get()->row();
+    }
+
+    function get_lod() {
+        $this->db->select('id_user');
+        $this->db->from('user');
+        $this->db->where("sign = 'LOD'");
+        $this->db->order_by('id_user', 'asc');
+        $this->db->limit(1);
+        return $this->db->get()->row();
+    }
+
+    function get_lpd() {
+        $this->db->select('id_user');
+        $this->db->from('user');
+        $this->db->where("sign = 'LPD'");
+        $this->db->order_by('id_user', 'asc');
+        $this->db->limit(1);
+        return $this->db->get()->row();
     }
     
     function generateAutoid($id){ 

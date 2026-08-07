@@ -690,6 +690,11 @@ class Unit_m extends CI_Model
             and id_unit = ' . $id . '')->row();
     }
 
+    function countCritical()
+    {
+        return (int) $this->db->where('condition', 'CRITICAL')->count_all_results('condition');
+    }
+
     function getCritical()
     {
         $this->db->select('*');
@@ -702,6 +707,61 @@ class Unit_m extends CI_Model
         $this->db->where('commod.id_comp = comp.id_comp');
         $this->db->where(array('condition.condition' => 'CRITICAL'));
         return $query = $this->db->get();
+    }
+
+    /**
+     * Latest HM only for units that currently have OPEN replacements (fast on large hm table).
+     */
+    private function pcrExceedFromSql()
+    {
+        return "FROM replacement r
+            INNER JOIN commod cm ON r.id_mod = cm.id_mod
+            INNER JOIN comp c ON cm.id_comp = c.id_comp
+            INNER JOIN unit u ON r.id_unit = u.id_unit
+            INNER JOIN project p ON u.id_project = p.id_project
+            INNER JOIN (
+                SELECT h.id_unit, h.hm_unit
+                FROM hm h
+                INNER JOIN (
+                    SELECT hm.id_unit, MAX(hm.date_hm) AS MaxDate
+                    FROM hm
+                    INNER JOIN replacement r2
+                        ON r2.id_unit = hm.id_unit
+                       AND r2.wo_status = 'OPEN'
+                       AND r2.wo_no != 0
+                    GROUP BY hm.id_unit
+                ) x ON h.id_unit = x.id_unit AND h.date_hm = x.MaxDate
+            ) latest ON latest.id_unit = r.id_unit
+            WHERE r.wo_status = 'OPEN'
+              AND r.wo_no != 0
+              AND cm.policy IS NOT NULL
+              AND ((latest.hm_unit - IFNULL(r.last_hm_rep, 0)) + IFNULL(r.comp_hour, 0)) >= cm.policy";
+    }
+
+    function countPcrExceed()
+    {
+        $sql = "SELECT COUNT(*) AS cnt " . $this->pcrExceedFromSql();
+        $row = $this->db->query($sql)->row();
+        return $row ? (int) $row->cnt : 0;
+    }
+
+    function getPcrExceedList()
+    {
+        $sql = "SELECT
+                r.id_unit,
+                u.unit_no,
+                p.kode_project,
+                c.comp_desc,
+                cm.policy,
+                latest.hm_unit,
+                r.last_hm_rep,
+                r.comp_hour,
+                ((latest.hm_unit - IFNULL(r.last_hm_rep, 0)) + IFNULL(r.comp_hour, 0)) AS comp_life,
+                r.wo_status,
+                cm.id_mod
+            " . $this->pcrExceedFromSql() . "
+            ORDER BY u.unit_no ASC, c.comp_desc ASC";
+        return $this->db->query($sql)->result_array();
     }
 
     function select_model($id)
